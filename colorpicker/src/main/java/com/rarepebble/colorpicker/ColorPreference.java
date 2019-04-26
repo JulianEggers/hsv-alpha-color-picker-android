@@ -20,9 +20,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.res.TypedArray;
 import android.graphics.Color;
+import android.graphics.drawable.Drawable;
 import android.support.annotation.NonNull;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.content.ContextCompat;
+import android.support.v4.graphics.drawable.DrawableCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.preference.DialogPreference;
 import android.support.v7.preference.PreferenceViewHolder;
@@ -169,6 +172,16 @@ public class ColorPreference extends DialogPreference {
 		if (thumbnail != null) {
 			thumbnail.setVisibility(thumbColor == null ? View.GONE : View.VISIBLE);
 			thumbnail.findViewById(R.id.colorPreview).setBackgroundColor(thumbColor == null ? 0 : thumbColor);
+
+			Drawable colorCycle = ContextCompat.getDrawable(getContext(), R.drawable.thumbnail_border).mutate();
+			DrawableCompat.setTint(colorCycle, thumbColor == null ? 0 : thumbColor);
+
+			int sdk = android.os.Build.VERSION.SDK_INT;
+            if (sdk < android.os.Build.VERSION_CODES.JELLY_BEAN) {
+                thumbnail.findViewById(R.id.colorPreview).setBackgroundDrawable(colorCycle);
+            } else {
+                thumbnail.findViewById(R.id.colorPreview).setBackground(colorCycle);
+            }
 		}
 	}
 
